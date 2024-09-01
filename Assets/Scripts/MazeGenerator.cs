@@ -22,8 +22,8 @@ public class MazeGenerator : MonoBehaviour
     #endregion
 
     public float scaleFactor = 4;
-    [Tooltip("The value the width and height of the maze will be multiplied by for the next levels")]
-    public int sizeMultiplier = 2;
+    //[Tooltip("The value the width and height of the maze will be multiplied by for the next levels")]
+    //public int sizeMultiplier = 2;
     [Tooltip("The distance from the player where the random spawning of objects (enemies/pills) should start")]
     public float startSpawnDistance = 3f;
     public GameObject ground, beam;
@@ -45,6 +45,7 @@ public class MazeGenerator : MonoBehaviour
     public bool generatingMaze = true;
     int width, depth;
     float cellSize;
+    float spawnDistance;
 
     void Start()
     {
@@ -76,11 +77,12 @@ public class MazeGenerator : MonoBehaviour
         ground.transform.position = mazeCenter;
         _mazeGrid[width / 2, depth / 2].SpawnCellObject(beam, scaleFactor);
         spawner.CalculateEmptyCells(depth * width);
+        ground.transform.localScale = new Vector3(width * scaleFactor, 0.05f, depth * scaleFactor);
 
+        spawnDistance = depth <= 3 ? 0 : startSpawnDistance;
         GenerateMaze(null, _mazeGrid[0, 0]);
 
         transform.localScale = transform.localScale * scaleFactor;
-        ground.transform.localScale = new Vector3(width * scaleFactor, 0.05f, depth * scaleFactor);
         beam.gameObject.SetActive(true);
         Invoke("BuildNavMap", 0.05f);
         SetPlayerPosition();
@@ -119,9 +121,10 @@ public class MazeGenerator : MonoBehaviour
         spawner.UpdateSpawnCounts();
         int oldW = width;
         int oldD = depth;
-        width = _mazeWidth * spawner.level;
-        depth = _mazeDepth * spawner.level;
-        Debug.Log("GENERATING NEW LEVEL " + spawner.level + "=> WIDTH = " + width + " // DEPTH = " + depth);
+        int sizeModifier = spawner.level < 6 ? 0 : spawner.level;
+        width = _mazeWidth * spawner.level + sizeModifier;
+        depth = _mazeDepth * spawner.level + sizeModifier;
+        //Debug.Log("GENERATING NEW LEVEL " + spawner.level + "=> WIDTH = " + width + " // DEPTH = " + depth);
 
         MazeCell[,] oldCells = _mazeGrid;
 
@@ -150,7 +153,7 @@ public class MazeGenerator : MonoBehaviour
     private void GenerateMaze(MazeCell previousCell, MazeCell currentCell)
     {
         currentCell.Visit();
-        if (previousCell != null && currentCell.transform.position.magnitude > startSpawnDistance)
+        if (previousCell != null && currentCell.transform.position.magnitude > spawnDistance)
         {
             GameObject spawnObject = previousCell.hasObject ? null : spawner.getRandomObject();
             currentCell.SpawnCellObject(spawnObject, scaleFactor);

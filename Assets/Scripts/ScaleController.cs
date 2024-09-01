@@ -36,14 +36,14 @@ public class ScaleController : MonoBehaviour
 
     float normalSize, camHeight;
     Size size = Size.Normal;
-    CamFollow cam;
+    CamController cam;
     CharacterController controller;
 
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         normalSize = transform.localScale.x;
-        cam = FindObjectOfType<CamFollow>();
+        cam = FindObjectOfType<CamController>();
         camHeight = cam.getHeight();
     }
 

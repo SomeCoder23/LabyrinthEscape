@@ -27,24 +27,22 @@ public class Pill : MonoBehaviour
     {
         switch (type)
         {
-            case PillType.Grow: Debug.Log("Took GROW pill!");
+            case PillType.Grow:
                 ScaleController.instance.Grow(activeTime);
                 break;
 
-            case PillType.Shrink: Debug.Log("Took SHRINK pill!");
+            case PillType.Shrink: 
                 ScaleController.instance.Shrink(activeTime); 
                 break;
 
-            case PillType.Random: Debug.Log("Took RANDOM pill!");
+            case PillType.Random: 
                 int action = Random.Range(0, 2);
                 if (action == 0) type = PillType.Grow;
                 else type = PillType.Shrink;
                 Use(); return;
 
-            case PillType.Invisible: Debug.Log("Took INVISIBLE pill!"); break;
-
             case PillType.Shield: Debug.Log("Took SHIELD pill!");
-                ThirdPersonController player = FindObjectOfType<ThirdPersonController>();
+                InteractionsController player = FindObjectOfType<InteractionsController>();
                 if (player != null)
                     player.ActivateShield(activeTime);
                 else Debug.Log("SHIELD NULL");
@@ -61,6 +59,5 @@ public enum PillType
     Grow,
     Shrink,
     Random,
-    Invisible,
     Shield
 }

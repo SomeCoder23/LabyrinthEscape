@@ -64,7 +64,7 @@ public class MazeCell : MonoBehaviour
             cellObject = spawnObject;
             if (spawnObject.gameObject.tag != "Portal")
             {
-                pos.y = 1;
+                pos.y = 0.8f;
                 cellObject = Instantiate(spawnObject, pos, Quaternion.identity);
             }
             else

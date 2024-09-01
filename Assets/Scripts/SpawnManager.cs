@@ -26,14 +26,14 @@ public class SpawnManager : MonoBehaviour
 
     public void CalculateEmptyCells(int mazeCells)
     {
-        emptyCellsCount = (mazeCells - (enemyCount + pillsCount) - 5);
-        diamondCount = emptyCellsCount / 3;
+        emptyCellsCount = (mazeCells - (enemyCount + pillsCount) - 1);
+        diamondCount = emptyCellsCount / 2;
     }
 
     public GameObject getRandomObject()
     {
         if (enemiesSpawned == enemyCount && pillsSpawned == pillsCount)
-            return null;
+            return diamondPrefab.gameObject;
 
         int maxNumber = emptyCellsCount > 0 ? 3 : 2;
         int ranObj = Random.Range(0, maxNumber);

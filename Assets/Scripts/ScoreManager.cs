@@ -40,14 +40,13 @@ public class ScoreManager : MonoBehaviour
 
     public void ActivateLoadScreen()
     {
-        Debug.Log("FADING IN SCREEN");
         blackImage.SetActive(true);
         Invoke("EndWaiting", fadeDuration);
     }
 
-    public void AddPoint()
+    public void AddPoint(int points = 1)
     {
-        score++;
+        score += points;
         scoreTxt.text = "Score: " + score.ToString();
     }
 
@@ -82,7 +81,6 @@ public class ScoreManager : MonoBehaviour
     {
         doneWaiting = false;
         doneGenerating = false;
-        Debug.Log("FADING OUT SCREEN");
         blackImage.SetActive(false);
         levelCounter.text = "Level " + level.ToString();
     }
@@ -105,6 +103,15 @@ public class ScoreManager : MonoBehaviour
         MazeGenerator.instance.ResetMaze();
     }
 
+    public void PauseGame(bool pause)
+    {
+        Time.timeScale = pause ? 0 : 1;
+    }
+
+    public int getLevel()
+    {
+        return level;
+    }
     //private IEnumerator FadeImage(float targetAlpha)
     //{
     //    float startAlpha = blackImage.color.a;

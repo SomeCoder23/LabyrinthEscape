@@ -17,8 +17,6 @@ using UnityEngine.UI;
 /// </summary>
 public class ThirdPersonController : MonoBehaviour
 {
-    public Shield shield;
-
     [Tooltip("Speed ​​at which the character moves. It is not affected by gravity or jumping.")]
     public float velocity = 5f;
     [Tooltip("This value is added to the speed value while the character is sprinting.")]
@@ -38,13 +36,11 @@ public class ThirdPersonController : MonoBehaviour
     // Player states
     bool isJumping = false;
     bool isSprinting = false;
-    bool isCrouching = false;
 
     // Inputs
     float inputHorizontal;
     float inputVertical;
     bool inputJump;
-    bool inputCrouch;
     bool inputSprint;
 
     Animator animator;
@@ -76,21 +72,9 @@ public class ThirdPersonController : MonoBehaviour
         inputVertical = Input.GetAxis("Vertical");
         inputJump = Input.GetAxis("Jump") == 1f;
         inputSprint = Input.GetAxis("Fire3") == 1f;
-        // Unfortunately GetAxis does not work with GetKeyDown, so inputs must be taken individually
-       // inputCrouch = Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.JoystickButton1);
 
-        // Check if you pressed the crouch input key and change the player's state
-        //if ( inputCrouch )
-        //    isCrouching = !isCrouching;
-
-        // Run and Crouch animation
-        // If dont have animator component, this block wont run
         if ( cc.isGrounded && animator != null )
         {
-
-            // Crouch
-            // Note: The crouch animation does not shrink the character's collider
-           // animator.SetBool("crouch", isCrouching);
             
             // Run
             float minimumSpeed = 0.9f;
@@ -110,8 +94,6 @@ public class ThirdPersonController : MonoBehaviour
         if ( inputJump && cc.isGrounded )
         {
             isJumping = true;
-            // Disable crounching when jumping
-            //isCrouching = false; 
         }
 
         HeadHittingDetect();
@@ -126,18 +108,18 @@ public class ThirdPersonController : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if (dead) return;
+        if (dead) 
+            return;
         // Sprinting velocity boost or crounching desacelerate
         float velocityAdittion = 0;
         if ( isSprinting )
             velocityAdittion = sprintAdittion;
-        if (isCrouching)
-            velocityAdittion =  - (velocity * 0.50f); // -50% velocity
 
         // Direction movement
         float directionX = inputHorizontal * (velocity + velocityAdittion) * Time.deltaTime;
         float directionZ = inputVertical * (velocity + velocityAdittion) * Time.deltaTime;
         float directionY = 0;
+        //Debug.Log("MOVEMENT=> DIRECTION X = " + directionX + " DIRECTION Z = " + directionZ);
 
         // Jump handler
         if ( isJumping )
@@ -162,18 +144,19 @@ public class ThirdPersonController : MonoBehaviour
         
         // --- Character rotation --- 
 
-        Vector3 forward = Camera.main.transform.forward;
-        Vector3 right = Camera.main.transform.right;
+        //Vector3 forward = Camera.main.transform.forward;
+        //Vector3 right = Camera.main.transform.right;
 
-        forward.y = 0;
-        right.y = 0;
+        //forward.y = 0;
+        //right.y = 0;
 
-        forward.Normalize();
-        right.Normalize();
+        //forward.Normalize();
+        //right.Normalize();
+        //Debug.Log("ROTATION => FORWARD = " + forward + " RIGHT = " + right);
 
         // Relate the front with the Z direction (depth) and right with X (lateral movement)
-        forward = forward * directionZ;
-        right = right * directionX;
+        Vector3 forward = Vector3.forward * directionZ;
+        Vector3 right = Vector3.right * directionX;
 
         if (directionX != 0 || directionZ != 0)
         {
@@ -211,10 +194,6 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
-    public void ActivateShield(float activationTime)
-    {
-        shield.Activate(activationTime);
-    }
 
     public void SetMaxDistance(float max)
     {

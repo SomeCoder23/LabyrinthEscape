@@ -547,6 +547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1791720eab40b934995ac31b605dacb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dieAudio: {fileID: 8300000, guid: 83efaab365edce745837387afcb126a0, type: 3}
+  chaseSpeedModifier: 0.2
   searchRadius: 7
   chaseDistance: 4
   searchTimeInterval: {x: 3, y: 6}

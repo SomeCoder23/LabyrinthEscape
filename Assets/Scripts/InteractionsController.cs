@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class InteractionsController : MonoBehaviour
 {
+    public Shield shield;
     public float pushForce;
+    public AudioClip outOfBoundsAudio;
 
-    bool onDrugs = false;
+    bool onDrugs = false, shieldOn = false;
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.CompareTag("Portal"))
         {
-            Debug.Log("Deactivating beam!");
-            ScoreManager.instance.ActivateLoadScreen();
-            hit.gameObject.transform.parent.gameObject.SetActive(false);
             SoundManager.instance.NewLevel();
             ScaleController.instance.ResetSize(false);
+            ScoreManager.instance.ActivateLoadScreen();
+            hit.gameObject.transform.parent.gameObject.SetActive(false);
             MazeGenerator.instance.ResetAndGenerate();
             return;
         }
@@ -35,9 +36,13 @@ public class InteractionsController : MonoBehaviour
                     Debug.Log("Side collision detected");
                     enemy.Push(hit.moveDirection * pushForce);
                 }
-                else enemy.Die();
+                else
+                {
+                    hit.collider.enabled = false;
+                    enemy.Die();
+                }
             }
-            else
+            else if (!shieldOn)
             {
                 GameOver();
             }
@@ -59,6 +64,13 @@ public class InteractionsController : MonoBehaviour
     void DeactivateDrug()
     {
         onDrugs = false;
+        shieldOn = false;
+    }
+
+    public void ActivateShield(float activationTime)
+    {
+        shield.Activate(activationTime);
+        shieldOn = true;
     }
 
 
@@ -69,7 +81,7 @@ public class InteractionsController : MonoBehaviour
             onDrugs = true;
             Pill pill = other.gameObject.GetComponent<Pill>();
             pill.Use();
-            Invoke("DeactivateDrug", pill.getActiveTime());
+            Invoke("DeactivateDrug", pill.getActiveTime() + 0.07f);
             Destroy(other.gameObject);
         }
         else if (other.gameObject.GetComponent<Collectable>() != null)
@@ -78,7 +90,7 @@ public class InteractionsController : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Bounds"))
         {
-            Debug.Log("PLAYER OUTSIDE BOUNDS!");
+            SoundManager.instance.PlaySound(outOfBoundsAudio);
             MazeGenerator.instance.SetPlayerPosition();
         }
     }

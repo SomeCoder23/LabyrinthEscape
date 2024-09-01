@@ -4,6 +4,8 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    public AudioClip dieAudio;
+    public float chaseSpeedModifier;
     public float searchRadius = 20f;
     public float chaseDistance = 10f;
     public Vector2 searchTimeInterval;
@@ -18,35 +20,44 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     private bool isChasing = false;
     private Vector3 searchDestination;
-    private float searchDistance;
+    private float searchDistance, chaseSpeed, speed;
     Rigidbody rb;
     bool dead;
     AudioSource audio;
 
     void Start()
     {
+        Vector3 pos = transform.position;
+        pos.y = 2.5f;
+        transform.position = pos;
         audio = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        setSpeed(ScoreManager.instance.getLevel());
+
         StartCoroutine(SearchRoutine());
     }
 
     void Update()
     {
+        if (dead)
+            return;
 
         if (isPlayerVisible())
         {
+            agent.speed = chaseSpeed;
             isChasing = true;
             audio.volume = 1;
             if(agent.enabled)
                 agent.SetDestination(player.position);
-            animator.SetFloat("Speed", agent.speed * 1.5f);
+            animator.SetFloat("Speed", chaseSpeed);
         }
         else if (isChasing)
         {
+            agent.speed = speed;
             isChasing = false;
             StartCoroutine(SearchRoutine());
         }
@@ -160,21 +171,28 @@ public class Enemy : MonoBehaviour
         if (dead) 
             return;
 
+        animator.SetBool("isDead", true);
         dead = true;
         Debug.Log(name + "WAS KILLED");
         agent.enabled = false;
-        StartCoroutine(ShutDown());
+        audio.PlayOneShot(dieAudio);
+        Invoke("SelfDestruct", 1.5f);
+        //StartCoroutine(ShutDown());
     }
 
-    IEnumerator ShutDown()
+    void SelfDestruct()
     {
-        while(audio.volume > 0)
-        {
-            audio.volume -= 0.1f;
-            yield return new WaitForSeconds(0.05f);
-        }
-
+        ScoreManager.instance.AddPoint(5);
         Destroy(this.gameObject);
+    }
+
+    void setSpeed(int level)
+    {
+        //level 5 => speed = 3.5 + 1.6 = 5.1 //// level 6 => speed = 3.5 + 
+        //chaseSpeed = level <= 5 ? agent.speed + level / 3 : agent.speed + level / 4;
+        speed = agent.speed;
+        chaseSpeed = speed + chaseSpeedModifier * level;
+        Debug.Log("SETTING CHASE SPEED TO : " + chaseSpeed + " ACCORDING TO LEVEL " + level );
     }
 
     private void OnDrawGizmosSelected()
