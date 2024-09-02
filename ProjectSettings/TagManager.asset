@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Portal
   - Bounds
+  - Audio
   layers:
   - Default
   - TransparentFX
