@@ -8,7 +8,7 @@ public class InteractionsController : MonoBehaviour
     public float pushForce;
     public AudioClip outOfBoundsAudio;
 
-    bool onDrugs = false, shieldOn = false;
+    bool onDrugs = false, shieldOn = false, gameOver = false;
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -24,39 +24,13 @@ public class InteractionsController : MonoBehaviour
             MazeGenerator.instance.ResetAndGenerate();
             return;
         }
-
-        //Enemy enemy = hit.gameObject.GetComponent<Enemy>();
-
-        //if (enemy != null)
-        //{
-        //    Debug.Log("COLLIDED WITH ENEMY!!");
-        //    if (ScaleController.instance.getSize() == Size.Large)
-        //    {
-        //        //bool isNextTo = Mathf.Abs(transform.position.y - hit.point.y) <= maxVerticalOffset;
-        //        bool isSideCollision = Mathf.Abs(hit.normal.y) < 0.5f;
-
-        //        if (isSideCollision)
-        //        {
-        //            Debug.Log("Side collision detected");
-        //            enemy.Push(hit.moveDirection * pushForce);
-        //        }
-        //        else
-        //        {
-        //            hit.collider.enabled = false;
-        //            enemy.Die();
-        //        }
-        //    }
-        //    else if (!shieldOn)
-        //    {
-        //        GameOver();
-        //    }
-        //}
     }
 
     void GameOver()
     {
-        if (!MazeGenerator.instance.generatingMaze)
+        if (!gameOver && !MazeGenerator.instance.generatingMaze)
         {
+            gameOver = true;
             SoundManager.instance.Lose();
             GameUIManager.instance.Lose();
             ThirdPersonController player = GetComponent<ThirdPersonController>();
