@@ -22,8 +22,6 @@ public class MazeGenerator : MonoBehaviour
     #endregion
 
     public float scaleFactor = 4;
-    //[Tooltip("The value the width and height of the maze will be multiplied by for the next levels")]
-    //public int sizeMultiplier = 2;
     [Tooltip("The distance from the player where the random spawning of objects (enemies/pills) should start")]
     public float startSpawnDistance = 3f;
     public GameObject ground, beam;
@@ -124,7 +122,6 @@ public class MazeGenerator : MonoBehaviour
         int sizeModifier = spawner.level < 6 ? 0 : spawner.level;
         width = _mazeWidth * spawner.level + sizeModifier;
         depth = _mazeDepth * spawner.level + sizeModifier;
-        //Debug.Log("GENERATING NEW LEVEL " + spawner.level + "=> WIDTH = " + width + " // DEPTH = " + depth);
 
         MazeCell[,] oldCells = _mazeGrid;
 

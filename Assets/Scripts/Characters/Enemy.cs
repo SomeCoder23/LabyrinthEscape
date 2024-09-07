@@ -190,8 +190,6 @@ public class Enemy : MonoBehaviour
 
     void setSpeed(int level)
     {
-        //level 5 => speed = 3.5 + 1.6 = 5.1 //// level 6 => speed = 3.5 + 
-        //chaseSpeed = level <= 5 ? agent.speed + level / 3 : agent.speed + level / 4;
         speed = agent.speed;
         chaseSpeed = speed + chaseSpeedModifier * level;
         chaseDistance += level / 2.5f;

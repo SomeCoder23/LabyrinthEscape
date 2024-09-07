@@ -12,7 +12,6 @@ public class WallData : ScriptableObject
     [Range(0, 1)]
     public float normalWallPercentage = 0.6f;
 
-    float doorWallPercentage;
     private static WallData _instance;
 
     public static WallData Instance

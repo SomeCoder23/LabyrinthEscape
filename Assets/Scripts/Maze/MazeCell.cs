@@ -28,25 +28,18 @@ public class MazeCell : MonoBehaviour
 
     void InitializeWalls()
     {
+        GenerateNewWall(_leftWall.transform);
+        GenerateNewWall(_frontWall.transform);
+        GenerateNewWall(_backWall.transform);
+        GenerateNewWall(_rightWall.transform);
+    }
+
+    void GenerateNewWall(Transform wallParent)
+    {
         GameObject newWall = WallData.Instance.getRandomWall();
-        if (_leftWall.transform.childCount >= 1)
-            Destroy(_leftWall.transform.GetChild(0));
-        Instantiate(newWall, _leftWall.transform);
-
-        newWall = WallData.Instance.getRandomWall();
-        if (_rightWall.transform.childCount >= 1)
-            Destroy(_rightWall.transform.GetChild(0));
-        Instantiate(newWall, _rightWall.transform);
-
-        newWall = WallData.Instance.getRandomWall();
-        if (_frontWall.transform.childCount >= 1)
-            Destroy(_frontWall.transform.GetChild(0));
-        Instantiate(newWall, _frontWall.transform);
-
-        newWall = WallData.Instance.getRandomWall();
-        if (_backWall.transform.childCount >= 1)
-            Destroy(_backWall.transform.GetChild(0));
-        Instantiate(newWall, _backWall.transform);
+        if (wallParent.childCount >= 1)
+            Destroy(wallParent.GetChild(0));
+        Instantiate(newWall, wallParent);
     }
 
     public void Visit()

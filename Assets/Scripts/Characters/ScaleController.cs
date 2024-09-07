@@ -53,7 +53,6 @@ public class ScaleController : MonoBehaviour
         SoundManager.instance.PlaySound(growSound);
         StartCoroutine(ChangeSize(maxSize));
         Invoke("ResetSize", resetTime + scaleTime);
-        //controller.height += 0.5f;
     }
 
     public void Shrink(float resetTime)
@@ -109,7 +108,6 @@ public class ScaleController : MonoBehaviour
         }
         else
         {
-            //controller.height -= 0.5f;
             if (withSound) SoundManager.instance.PlaySound(shrinkSound);
         }
 

@@ -12,6 +12,7 @@ Theme: **Built to Scale**
 - **Maze Generation**: Each level presents a new maze that increases in size and difficulty as you progress. The maze is filled with enemies, obstacles, and power-ups.
 
 - **Power-Ups**:
+  Players can take only one pill at a time.
   - **Green Pill**: Shrinks the player, allowing them to navigate through small doorways which the enemies can't path through, however this also shrinks their field of view.
   - **Turquoise Pill**: Enlarges the player, enabling them squish enemies and provides them with a wider field of view.
   - **Mixed Pill**: Grants a random effect, either shrinking or enlarging the player unpredictably.
